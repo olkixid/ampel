@@ -43,9 +43,8 @@
 
 /*
  * Basis Adresses des Reset and Clock control Module (RCC)
- * * TODO: Addresse ergänzen 
  */
-#define RCC_BASEADDR					
+#define RCC_BASEADDR					0x40023800U
 
 
 /********************************** Register definition structs **********************************/
@@ -68,16 +67,43 @@ typedef struct
 
 /*
  * Konfigurationsregister des RCC
- * TODO: Ergänzen der entsprechenden Struktur insbesondere:
- * AHB1ENR und AHB1RSTR
  */
 typedef struct
 {
-  //...
-  volatile uint32_t AHB1RSTR;      /*Address offset: 0x10 */
-  //...
-  volatile uint32_t AHB1ENR;       /* Address offset: 0x?? */
-  //...
+	volatile uint32_t CR;          //0x00
+	volatile uint32_t PLLCFGR;     //0x04
+	volatile uint32_t CFGR;        //0X08
+	volatile uint32_t CIR;         //0x0C
+	volatile uint32_t AHB1RSTR;    //0x10
+	volatile uint32_t AHB2RSTR;    //0x14
+	volatile uint32_t AHB3RSTR;    //0x18
+	volatile uint32_t RESERVED00;  //0x1C
+	volatile uint32_t APB1RSTR;    //0x20
+	volatile uint32_t APB2RSTR;    //0x24
+	volatile uint32_t RESERVED01;  //0x28
+	volatile uint32_t RESERVED02;  //0x2C
+	volatile uint32_t AHB1ENR;     //0x30
+	volatile uint32_t AHB2ENR;     //0x34
+	volatile uint32_t AHB3ENR;     //0x38
+	volatile uint32_t RESERVED03;  //0x3C
+	volatile uint32_t APB1ENR;     //0x40
+	volatile uint32_t APB2ENR;     //0x44
+	volatile uint32_t RESERVED04;  //0x48
+	volatile uint32_t RESERVED05;  //0x4C
+	volatile uint32_t AHB1LPENR;   //0x50
+	volatile uint32_t AHB2LPENR;   //0x54
+	volatile uint32_t AHB3LPENR;   //0x58
+	volatile uint32_t RESERVED06;  //0x5C
+	volatile uint32_t APB1LPENR;   //0x60
+	volatile uint32_t APB2LPENR;   //0x64
+	volatile uint32_t RESERVED07;  //0x68
+	volatile uint32_t RESERVED08;  //0x6C
+	volatile uint32_t BDCR;        //0x70
+	volatile uint32_t CSR;         //0x74
+	volatile uint32_t RESERVED09;  //0x78
+	volatile uint32_t RESERVED10;  //0x7C
+	volatile uint32_t SSCGR;       //0x80
+	volatile uint32_t PLLI2SCFGR;  //0x84
 } RCC_RegDef_t;
 
 
@@ -101,28 +127,26 @@ typedef struct
 
 /*
  * Clock Enable Makros für GPIO-Ports
- * TODO: Schreiben Sie Clock Enable und Disable Makros für die GPIO-Ports A bis I
- * Sehen Sie sich dazu die Informationen im Handbuch zum AHB1ENR-Register des RCC-Moduls an.
  */
-#define GPIOA_PCLK_EN()		(RCC->AHB1ENR |=...)
-#define GPIOB_PCLK_EN()
-#define GPIOC_PCLK_EN()
-#define GPIOD_PCLK_EN()
-#define GPIOE_PCLK_EN()
-#define GPIOF_PCLK_EN()
-#define GPIOG_PCLK_EN()
-#define GPIOH_PCLK_EN()
-#define GPIOI_PCLK_EN()
+#define GPIOA_PCLK_EN()     (RCC->AHB1ENR |= (1 << 0))
+#define GPIOB_PCLK_EN()     (RCC->AHB1ENR |= (1 << 1))
+#define GPIOC_PCLK_EN()     (RCC->AHB1ENR |= (1 << 2))
+#define GPIOD_PCLK_EN()     (RCC->AHB1ENR |= (1 << 3))
+#define GPIOE_PCLK_EN()     (RCC->AHB1ENR |= (1 << 4))
+#define GPIOF_PCLK_EN()     (RCC->AHB1ENR |= (1 << 5))
+#define GPIOG_PCLK_EN()     (RCC->AHB1ENR |= (1 << 6))
+#define GPIOH_PCLK_EN()     (RCC->AHB1ENR |= (1 << 7))
+#define GPIOI_PCLK_EN()     (RCC->AHB1ENR |= (1 << 8))
 
-#define GPIOA_PCLK_DI()
-#define GPIOB_PCLK_DI()
-#define GPIOC_PCLK_DI()
-#define GPIOD_PCLK_DI()
-#define GPIOE_PCLK_DI()
-#define GPIOF_PCLK_DI()
-#define GPIOG_PCLK_DI()
-#define GPIOH_PCLK_DI()
-#define GPIOI_PCLK_DI()
+#define GPIOA_PCLK_DI()     (RCC->AHB1ENR &= ~(1 << 0))
+#define GPIOB_PCLK_DI()     (RCC->AHB1ENR &= ~(1 << 1))
+#define GPIOC_PCLK_DI()     (RCC->AHB1ENR &= ~(1 << 2))
+#define GPIOD_PCLK_DI()     (RCC->AHB1ENR &= ~(1 << 3))
+#define GPIOE_PCLK_DI()     (RCC->AHB1ENR &= ~(1 << 4))
+#define GPIOF_PCLK_DI()     (RCC->AHB1ENR &= ~(1 << 5))
+#define GPIOG_PCLK_DI()     (RCC->AHB1ENR &= ~(1 << 6))
+#define GPIOH_PCLK_DI()     (RCC->AHB1ENR &= ~(1 << 7))
+#define GPIOI_PCLK_DI()     (RCC->AHB1ENR &= ~(1 << 8))
 
 
 /*
@@ -141,32 +165,30 @@ typedef struct
 // ####################################### Teil IRQ ############################################################
 /*
  * ARM Cortex Mx Processor NVIC register Addresses
- * TODO: Tragen sie die Basisadressen aus dem Cortex M4 Handbuch ein.
  */
 
-#define NVIC_ISER0          
-#define NVIC_ISER1          
-#define NVIC_ISER2          
-#define NVIC_ISER3          
+#define NVIC_ISER0          0xE000E100U
+#define NVIC_ISER1          0xE000E104U
+#define NVIC_ISER2          0xE000E108U
+#define NVIC_ISER3          0xE000E10CU
 
-#define NVIC_ICER0 			
-#define NVIC_ICER1			
-#define NVIC_ICER2  		(
-#define NVIC_ICER3			
+#define NVIC_ICER0          0XE000E180U
+#define NVIC_ICER1          0XE000E184U
+#define NVIC_ICER2          0XE000E188U
+#define NVIC_ICER3          0XE000E18CU
 
 
 /*
  * IRQ(Interrupt Request) Nummern für STM32F407x MCU
- * TODO: Ausfüllen der IRQ--Nummern für EXTI
  */
 
-#define IRQ_NO_EXTI0 
-#define IRQ_NO_EXTI1 
-#define IRQ_NO_EXTI2 
-#define IRQ_NO_EXTI3 
-#define IRQ_NO_EXTI4 
-#define IRQ_NO_EXTI9_5 
-#define IRQ_NO_EXTI15_10 
+#define IRQ_NO_EXTI0       6
+#define IRQ_NO_EXTI1       7
+#define IRQ_NO_EXTI2       8
+#define IRQ_NO_EXTI3       9
+#define IRQ_NO_EXTI4      10
+#define IRQ_NO_EXTI9_5    23
+#define IRQ_NO_EXTI15_10  40
 
 /*
  * EXTI Adressen und Makros
@@ -180,19 +202,22 @@ typedef struct
 #define SYSCFG				((SYSCFG_RegDef_t*)SYSCFG_BASEADDR)
 /*
  * Clock Enable und Disable Makros für SYSCFG
- * TODO: Vervollständigen Sie die Makros zum anschalten und Abschalten der Syscfg Clock
  */
-#define SYSCFG_PCLK_EN()
-#define SYSCFG_PCLK_DI()
+#define SYSCFG_PCLK_EN()     (RCC->APB2ENR |= (1 << 14))
+#define SYSCFG_PCLK_DI()     (RCC->APB2ENR &= ~(1 << 14))
 
 /*
  * Register struct EXTI
- * TODO: Legen Sie ein entsprechendes Struct an
+ * TODO: Beschreibungen verbessern
  */
 typedef struct
 {
-	volatile uint32_t IMR;    /*!< Kurze Beschreibung    Address offset: 0x00 */
-	//...
+	volatile uint32_t IMR;    /*!< Interrupt Mask    Address offset: 0x00 */
+	volatile uint32_t EMR;    /*!< Event Mask        Address offset: 0x04 */
+	volatile uint32_t RTSR;   /*!< Rising Edge Trigger    Address offset: 0x08 */
+	volatile uint32_t FTSR;   /*!< Falling Edge Trigger    Address offset: 0x0C */
+	volatile uint32_t SWIER;  /*!< Software Interrupt Event    Address offset: 0x10 */
+	volatile uint32_t PR;     /*!< Pending    Address offset: 0x14 */
 }EXTI_RegDef_t;
 
 /*
