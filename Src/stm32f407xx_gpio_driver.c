@@ -42,7 +42,34 @@ void GPIO_PeriClockControl(GPIO_RegDef_t *pGPIOx, uint8_t EnorDi)
 	}
 	else
 	{
-		//TODO: Implementieren Sie die Funktionalität der Clock Deaktivierung
+		if(pGPIOx == GPIOA)
+		{
+			GPIOA_PCLK_DI();
+		}else if (pGPIOx == GPIOB)
+		{
+			GPIOB_PCLK_DI();
+		}else if (pGPIOx == GPIOC)
+		{
+			GPIOC_PCLK_DI();
+		}else if (pGPIOx == GPIOD)
+		{
+			GPIOD_PCLK_DI();
+		}else if (pGPIOx == GPIOE)
+		{
+			GPIOE_PCLK_DI();
+		}else if (pGPIOx == GPIOF)
+		{
+			GPIOF_PCLK_DI();
+		}else if (pGPIOx == GPIOG)
+		{
+			GPIOG_PCLK_DI();
+		}else if (pGPIOx == GPIOH)
+		{
+			GPIOH_PCLK_DI();
+		}else if (pGPIOx == GPIOI)
+		{
+			GPIOI_PCLK_DI();
+		}
 	}
 
 }
@@ -60,7 +87,8 @@ void GPIO_Init(GPIO_Handle_t *pGPIOHandle)
 	 //Konfigurieren des PIN in INPUT oder OUTPUT-Modus
 	 if(pGPIOHandle->GPIO_PinConfig.GPIO_PinMode <= GPIO_MODE_ANALOG)
 	 {
-		//...
+		 pGPIOHandle->pGPIOx->MODE_REG &= ~(3 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber * 2);
+		 pGPIOHandle->pGPIOx->MODE_REG |= (pGPIOHandle->GPIO_PinConfig.GPIO_PinMode << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber * 2);
 	 }else{ // Interrupt Modus kommt im zweiten Teil
 	    // IRQ-Modus
 		// 1. Konfiguration für Trigger auf fallenende, steigende oder beide Flanken
@@ -72,12 +100,27 @@ void GPIO_Init(GPIO_Handle_t *pGPIOHandle)
 	 }
 
 	 //Konfigurieren des Output-Speeds
-	 
+	 if(pGPIOHandle->GPIO_PinConfig.GPIO_PinSpeed <= GPIO_SPEED_HIGH)
+	 {
+		 pGPIOHandle->pGPIOx->OUTPUT_SPEED &= ~(3 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber * 2);
+		 pGPIOHandle->pGPIOx->OUTPUT_SPEED |= (pGPIOHandle->GPIO_PinConfig.GPIO_PinSpeed << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber * 2);
+	 }
 
 	 //Konfigurieren des Pull-up/down Settings
-	 
+	 if(pGPIOHandle->GPIO_PinConfig.GPIO_PinPuPdControl <= GPIO_PIN_PD)
+	 {
+		 pGPIOHandle->pGPIOx->PULL_UP_DOWN &= ~(3 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber * 2);
+		 pGPIOHandle->pGPIOx->PULL_UP_DOWN |= (pGPIOHandle->GPIO_PinConfig.GPIO_PinPuPdControl << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber * 2);
+	 }
 
 	 //Konfigurieren des Output modus
+	 if(pGPIOHandle->GPIO_PinConfig.GPIO_PinOPType == GPIO_OP_TYPE_OD)
+	 {
+		 pGPIOHandle->pGPIOx->OUTPUT_TYPE |=  (1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);
+	 }
+	 else {
+		 pGPIOHandle->pGPIOx->OUTPUT_TYPE &= ~(1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);
+	 }
 	 
 }
 
