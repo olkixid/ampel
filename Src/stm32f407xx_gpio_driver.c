@@ -158,34 +158,33 @@ void GPIO_DeInit(GPIO_RegDef_t *pGPIOx)
 
 }
 
-// Implementieren Sie die Funktionalität
 uint8_t GPIO_ReadFromInputPin(GPIO_Handle_t *pGPIO_Handle)
 {
-	
+	return (pGPIO_Handle->pGPIOx->INPUT_DATA_REG & (1 << pGPIO_Handle->GPIO_PinConfig.GPIO_PinNumber) ) != 0;
 }
 
-// Implementieren Sie die Funktionalität
 uint16_t GPIO_ReadFromInputPort(GPIO_RegDef_t *pGPIOx)
 {
-	
+	return (uint16_t)pGPIOx->INPUT_DATA_REG;
 }
 
-// Implementieren Sie die Funktionalität
 void GPIO_WriteToOutputPin(GPIO_Handle_t *pGPIO_Handle, uint8_t Value)
 {
-	
+	if (Value) {
+		pGPIO_Handle->pGPIOx->OUTPUT_DATA_REG |=  (1 << pGPIO_Handle->GPIO_PinConfig.GPIO_PinNumber);
+	} else {
+		pGPIO_Handle->pGPIOx->OUTPUT_DATA_REG &= ~(1 << pGPIO_Handle->GPIO_PinConfig.GPIO_PinNumber);
+	}
 }
 
-// Implementieren Sie die Funktionalität
 void GPIO_WriteToOutputPort(GPIO_RegDef_t *pGPIOx, uint16_t Value)
 {
-	
+	pGPIOx->OUTPUT_DATA_REG = (uint32_t)Value;
 }
 
-// Implementieren Sie die Funktionalität
 void GPIO_ToggleOutputPin(GPIO_Handle_t *pGPIO_Handle)
 {
-	
+	pGPIO_Handle->pGPIOx->OUTPUT_DATA_REG ^= (1 << pGPIO_Handle->GPIO_PinConfig.GPIO_PinNumber);
 }
 
 // ####################################### Teil IRQ ############################################################
