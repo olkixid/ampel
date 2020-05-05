@@ -25,16 +25,27 @@
 
 
 
-void delay3s(void) {
-	for (volatile uint32_t i=0; i < 3333333U; i++);
+void delay5s(void) {
+	for (volatile uint32_t i=0; i < 5697356U; i++);
 }
 
 int main(void)
 {
-	GPIO_Handle_t orange_led = {
-		GPIOD,
+	GPIO_Handle_t red_led = {
+		GPIOA,
 		{
-			GPIO_PIN_NO_13,
+			GPIO_PIN_NO_1,
+			GPIO_MODE_OUT,
+			GPIO_SPEED_LOW,
+			GPIO_NO_PUPD,
+			GPIO_OP_TYPE_PP
+		}
+	};
+
+	GPIO_Handle_t yellow_led = {
+		GPIOA,
+		{
+			GPIO_PIN_NO_3,
 			GPIO_MODE_OUT,
 			GPIO_SPEED_LOW,
 			GPIO_NO_PUPD,
@@ -43,31 +54,9 @@ int main(void)
 	};
 
 	GPIO_Handle_t green_led = {
-		GPIOD,
+		GPIOA,
 		{
-			GPIO_PIN_NO_12,
-			GPIO_MODE_OUT,
-			GPIO_SPEED_LOW,
-			GPIO_NO_PUPD,
-			GPIO_OP_TYPE_PP
-		}
-	};
-
-	GPIO_Handle_t blue_led = {
-		GPIOD,
-		{
-			GPIO_PIN_NO_15,
-			GPIO_MODE_OUT,
-			GPIO_SPEED_LOW,
-			GPIO_NO_PUPD,
-			GPIO_OP_TYPE_PP
-		}
-	};
-
-	GPIO_Handle_t red_led = {
-		GPIOD,
-		{
-			GPIO_PIN_NO_14,
+			GPIO_PIN_NO_5,
 			GPIO_MODE_OUT,
 			GPIO_SPEED_LOW,
 			GPIO_NO_PUPD,
@@ -76,20 +65,23 @@ int main(void)
 	};
 
 
-	GPIO_Init(&orange_led);
-	GPIO_Init(&green_led);
-	GPIO_Init(&blue_led);
+
 	GPIO_Init(&red_led);
+	GPIO_Init(&yellow_led);
+	GPIO_Init(&green_led);
 
 	for(;;) {
 		GPIO_WriteToOutputPin(&red_led, 1);
-		delay3s();
+		delay5s();
+		GPIO_WriteToOutputPin(&yellow_led, 1);
+		delay5s();
 		GPIO_WriteToOutputPin(&red_led, 0);
+		GPIO_WriteToOutputPin(&yellow_led, 0);
 		GPIO_WriteToOutputPin(&green_led, 1);
-		delay3s();
+		delay5s();
 		GPIO_WriteToOutputPin(&green_led, 0);
-		GPIO_WriteToOutputPin(&orange_led, 1);
-		delay3s();
-		GPIO_WriteToOutputPin(&orange_led, 0);
+		GPIO_WriteToOutputPin(&yellow_led, 1);
+		delay5s();
+		GPIO_WriteToOutputPin(&yellow_led, 0);
 	}
 }
