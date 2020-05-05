@@ -17,11 +17,96 @@
  ******************************************************************************
  */
 
+#include "stm32f407xx_gpio_driver.h"
+
 #if !defined(__SOFT_FP__) && defined(__ARM_FP)
   #warning "FPU is not initialized, but the project is compiling for an FPU. Please initialize the FPU before use."
 #endif
 
+
+
+void delay(void) {
+	for (volatile uint32_t i=0; i < 500000; i++);
+}
+
 int main(void)
 {
-	for(;;);
+	GPIO_Handle_t orange_led = {
+		GPIOD,
+		{
+			GPIO_PIN_NO_13,
+			GPIO_MODE_OUT,
+			GPIO_SPEED_LOW,
+			GPIO_NO_PUPD,
+			GPIO_OP_TYPE_PP
+		}
+	};
+
+	GPIO_Handle_t green_led = {
+		GPIOD,
+		{
+			GPIO_PIN_NO_12,
+			GPIO_MODE_OUT,
+			GPIO_SPEED_LOW,
+			GPIO_NO_PUPD,
+			GPIO_OP_TYPE_PP
+		}
+	};
+
+	GPIO_Handle_t blue_led = {
+		GPIOD,
+		{
+			GPIO_PIN_NO_15,
+			GPIO_MODE_OUT,
+			GPIO_SPEED_LOW,
+			GPIO_NO_PUPD,
+			GPIO_OP_TYPE_PP
+		}
+	};
+
+	GPIO_Handle_t red_led = {
+		GPIOD,
+		{
+			GPIO_PIN_NO_14,
+			GPIO_MODE_OUT,
+			GPIO_SPEED_LOW,
+			GPIO_NO_PUPD,
+			GPIO_OP_TYPE_PP
+		}
+	};
+
+
+	GPIO_Init(&orange_led);
+	GPIO_Init(&green_led);
+	GPIO_Init(&blue_led);
+	GPIO_Init(&red_led);
+
+	for(;;) {
+//		GPIO_ToggleOutputPin(&orange_led);
+//		delay();
+//		GPIO_ToggleOutputPin(&green_led);
+//		delay();
+//		GPIO_ToggleOutputPin(&blue_led);
+//		delay();
+//		GPIO_ToggleOutputPin(&red_led);
+//		delay();
+
+		GPIO_WriteToOutputPin(&orange_led, 1);
+		delay();
+		GPIO_WriteToOutputPin(&green_led, 1);
+		delay();
+		GPIO_WriteToOutputPin(&blue_led, 1);
+		delay();
+		GPIO_WriteToOutputPin(&red_led, 1);
+		delay();
+
+		GPIO_WriteToOutputPin(&orange_led, 0);
+		delay();
+		GPIO_WriteToOutputPin(&green_led, 0);
+		delay();
+		GPIO_WriteToOutputPin(&blue_led, 0);
+		delay();
+		GPIO_WriteToOutputPin(&red_led, 0);
+		delay();
+	}
 }
