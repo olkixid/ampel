@@ -25,8 +25,8 @@
 
 
 
-void delay(void) {
-	for (volatile uint32_t i=0; i < 500000; i++);
+void delay3s(void) {
+	for (volatile uint32_t i=0; i < 3333333U; i++);
 }
 
 int main(void)
@@ -82,31 +82,14 @@ int main(void)
 	GPIO_Init(&red_led);
 
 	for(;;) {
-//		GPIO_ToggleOutputPin(&orange_led);
-//		delay();
-//		GPIO_ToggleOutputPin(&green_led);
-//		delay();
-//		GPIO_ToggleOutputPin(&blue_led);
-//		delay();
-//		GPIO_ToggleOutputPin(&red_led);
-//		delay();
-
-		GPIO_WriteToOutputPin(&orange_led, 1);
-		delay();
-		GPIO_WriteToOutputPin(&green_led, 1);
-		delay();
-		GPIO_WriteToOutputPin(&blue_led, 1);
-		delay();
 		GPIO_WriteToOutputPin(&red_led, 1);
-		delay();
-
-		GPIO_WriteToOutputPin(&orange_led, 0);
-		delay();
-		GPIO_WriteToOutputPin(&green_led, 0);
-		delay();
-		GPIO_WriteToOutputPin(&blue_led, 0);
-		delay();
+		delay3s();
 		GPIO_WriteToOutputPin(&red_led, 0);
-		delay();
+		GPIO_WriteToOutputPin(&green_led, 1);
+		delay3s();
+		GPIO_WriteToOutputPin(&green_led, 0);
+		GPIO_WriteToOutputPin(&orange_led, 1);
+		delay3s();
+		GPIO_WriteToOutputPin(&orange_led, 0);
 	}
 }
