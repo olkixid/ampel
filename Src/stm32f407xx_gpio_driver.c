@@ -91,11 +91,31 @@ void GPIO_Init(GPIO_Handle_t *pGPIOHandle)
 		 pGPIOHandle->pGPIOx->MODE_REG |= (pGPIOHandle->GPIO_PinConfig.GPIO_PinMode << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber * 2);
 	 }else{ // Interrupt Modus kommt im zweiten Teil
 	    // IRQ-Modus
+		pGPIOHandle->pGPIOx->MODE_REG &= ~(3 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber * 2);
+		pGPIOHandle->pGPIOx->MODE_REG |= (GPIO_MODE_IN << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber * 2);
+		SYSCFG_PCLK_EN();
+
 		// 1. Konfiguration für Trigger auf fallenende, steigende oder beide Flanken
-		
+		if (pGPIOHandle->GPIO_PinConfig.GPIO_PinMode == GPIO_MODE_IT_RT) {
+			EXTI->RTSR |=  (1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);
+			EXTI->FTSR &= ~(1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);
+		} else if (pGPIOHandle->GPIO_PinConfig.GPIO_PinMode == GPIO_MODE_IT_FT) {
+			EXTI->RTSR &= ~(1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);
+			EXTI->FTSR |=  (1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);
+		} else {
+			EXTI->RTSR |= (1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);
+			EXTI->FTSR |= (1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);
+		}
+
 
 		//2. Konfiguration des entsprechenden GPIO-Ports in SYSCFG_EXTICR
+		uint32_t extiChar = GPIO_BASEADDR_TO_CODE(pGPIOHandle->pGPIOx);
+		SYSCFG->EXTICR[pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber / 4] &= ~(15 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber % 4 * 4);
+		SYSCFG->EXTICR[pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber / 4] |=  (extiChar << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber % 4 * 4);
+
+
 		//3  Aktivieren des EXTI Interrupts handling in IMR-Register
+		EXTI->IMR |= (1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);
 		 
 	 }
 
@@ -194,10 +214,26 @@ void GPIO_IRQInterruptConfig(uint8_t IRQNumber, uint8_t EnorDi)
 	// Nicht alle Interrupts sind im Mikrocontroller aktiv. Überprüfen sie dazu das Handbuch (Reference Manual) des Mikrocontrollers.
 	if(EnorDi == ENABLE)
 	{
-		//ToDo: Programmieren der entsprechenden ISERx register
+		if (IRQNumber < 32) {
+			(*((volatile uint32_t*) NVIC_ISER0)) |= (1 << IRQNumber % 32);
+		} else if (IRQNumber < 64) {
+			(*((volatile uint32_t*) NVIC_ISER1)) |= (1 << IRQNumber % 32);
+		} else if (IRQNumber < 96) {
+			(*((volatile uint32_t*) NVIC_ISER2)) |= (1 << IRQNumber % 32);
+		} else if (IRQNumber < 128) {
+			(*((volatile uint32_t*) NVIC_ISER3)) |= (1 << IRQNumber % 32);
+		}
 	}else
 	{
-		//ToDo: Programmieren der entsprechenden ICERx register
+		if (IRQNumber < 32) {
+			(*((volatile uint32_t*) NVIC_ICER0)) |= (1 << IRQNumber % 32);
+		} else if (IRQNumber < 64) {
+			(*((volatile uint32_t*) NVIC_ICER1)) |= (1 << IRQNumber % 32);
+		} else if (IRQNumber < 96) {
+			(*((volatile uint32_t*) NVIC_ICER2)) |= (1 << IRQNumber % 32);
+		} else if (IRQNumber < 128) {
+			(*((volatile uint32_t*) NVIC_ICER3)) |= (1 << IRQNumber % 32);
+		}
 	}
 
 }
