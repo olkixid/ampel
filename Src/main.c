@@ -139,6 +139,8 @@ int main(void)
 
 	GPIO_WriteToOutputPin(&red_led, 1);
 
+
+	//set_timer_5s und next_state müssten atomic sein. Diese Version könnte Menschenleben kosten.
 	for(;;) {
 		set_timer_5s();
 		wait_for_timer();

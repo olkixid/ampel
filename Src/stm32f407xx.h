@@ -57,12 +57,16 @@
  */
 typedef struct
 {
-  volatile uint32_t MODE_REG;      				/* Address offset: 0x00 */
-  volatile uint32_t OUTPUT_TYPE;  				/* Address offset: 0x04 */
-  volatile uint32_t OUTPUT_SPEED;  				/* Address offset: 0x08 */
-  volatile uint32_t PULL_UP_DOWN;  				/* Address offset: 0x0C */
-  volatile uint32_t INPUT_DATA_REG;    			/* Address offset: 0x10 */
-  volatile uint32_t OUTPUT_DATA_REG;			/* Address offset: 0x14 */
+  volatile uint32_t MODE_REG;      				/* Address offset: 0x00 (Input, Output etc. wählen) */
+  volatile uint32_t OUTPUT_TYPE;  				/* Address offset: 0x04 (Hier kann man den Opendrainmodus anschalten)*/
+  volatile uint32_t OUTPUT_SPEED;  				/* Address offset: 0x08 (Schaltgeschwindigkeit anpassen)*/
+  volatile uint32_t PULL_UP_DOWN;  				/* Address offset: 0x0C (Interne Pullups und Pulldowns an- und auschalten)*/
+  volatile uint32_t INPUT_DATA_REG;    			/* Address offset: 0x10 (An Ports anliegende Daten auslesen)*/
+  volatile uint32_t OUTPUT_DATA_REG;			/* Address offset: 0x14 (Daten an Ports ausgeben)*/
+  volatile uint32_t BITSET_RESET_REG;    		/* Address offset: 0x18 (Einzelne Ausgangsbits ein- und ausschalten ohne die anderen zu verändern)*/
+  volatile uint32_t CONF_LOCK_REG;    			/* Address offset: 0x1c (GPIO Konfiguration bis zum Neustart/RESET unveränderbar machen)*/
+  volatile uint32_t ALT_FUNC_LOW;    			/* Address offset: 0x20 (divers)*/
+  volatile uint32_t ALT_FUNC_HIGH;				/* Address offset: 0x24 (divers)*/
 }GPIO_RegDef_t;
 
 /*
